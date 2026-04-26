@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Weather Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #f3f7ff;
+      --card: #ffffff;
+      --text: #1d3557;
+      --muted: #5f6c7b;
+      --accent: #1976d2;
+    }
+
+    body {
+      background: linear-gradient(160deg, #eff5ff, #f7fbff 50%, #eef7f5);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1565c0, #1e88e5, #42a5f5);
+      color: #fff;
+      border-radius: 16px;
+      padding: 26px 22px;
+      box-shadow: 0 10px 30px rgba(21, 101, 192, 0.25);
+    }
+
+    .panel {
+      background: var(--card);
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(18, 40, 68, 0.08);
+      padding: 16px;
+      height: 100%;
+    }
+
+    .kpi {
+      background: linear-gradient(135deg, #ffffff, #f4f9ff);
+      border: 1px solid #e3edf8;
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      height: 100%;
+    }
+
+    .kpi .value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .kpi .label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 6px;
+    }
+
+    .chart-box {
+      position: relative;
+      height: 300px;
+    }
+
+    .small-chart {
+      position: relative;
+      height: 260px;
+    }
+
+    .section-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <div class="hero mb-4">
+      <h1 class="mb-2">Weather Intelligence Dashboard</h1>
+      <p class="mb-0">Real-world style dashboard for city weather monitoring, trend analysis, and planning.</p>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="panel">
+          <label for="citySelect" class="form-label fw-semibold">City</label>
+          <select id="citySelect" class="form-select"></select>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="panel">
+          <label for="rangeSelect" class="form-label fw-semibold">Forecast Range</label>
+          <select id="rangeSelect" class="form-select">
+            <option value="7">7 Days</option>
+            <option value="14">14 Days</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="panel">
+          <label for="unitSelect" class="form-label fw-semibold">Temperature Unit</label>
+          <select id="unitSelect" class="form-select">
+            <option value="C">Celsius (C)</option>
+            <option value="F">Fahrenheit (F)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4" id="kpiRow">
+      <div class="col-6 col-lg-3">
+        <div class="kpi">
+          <div class="value" id="avgTemp">--</div>
+          <div class="label">Average Temperature</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="kpi">
+          <div class="value" id="maxTemp">--</div>
+          <div class="label">Maximum Temperature</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="kpi">
+          <div class="value" id="avgHumidity">--</div>
+          <div class="label">Average Humidity</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="kpi">
+          <div class="value" id="rainDays">--</div>
+          <div class="label">Rainy Days</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-12">
+        <div class="panel">
+          <div class="section-title">Temperature Trend</div>
+          <div class="chart-box">
+            <canvas id="tempChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="panel">
+          <div class="section-title">Humidity and Rainfall</div>
+          <div class="small-chart">
+            <canvas id="rainHumidityChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="panel">
+          <div class="section-title">Weather Conditions Distribution</div>
+          <div class="small-chart">
+            <canvas id="conditionChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const weatherData = {
+      Delhi: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon2", "Tue2", "Wed2", "Thu2", "Fri2", "Sat2", "Sun2"],
+        tempC: [34, 35, 36, 37, 39, 40, 38, 36, 35, 34, 33, 35, 37, 38],
+        humidity: [45, 42, 40, 38, 35, 32, 36, 41, 46, 49, 52, 48, 43, 40],
+        rainfall: [2, 0, 0, 1, 0, 0, 3, 4, 6, 8, 7, 3, 1, 0],
+        condition: ["Sunny", "Sunny", "Sunny", "Cloudy", "Sunny", "Sunny", "Rain", "Rain", "Cloudy", "Rain", "Rain", "Cloudy", "Sunny", "Sunny"]
+      },
+      Mumbai: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon2", "Tue2", "Wed2", "Thu2", "Fri2", "Sat2", "Sun2"],
+        tempC: [30, 31, 30, 29, 30, 31, 31, 30, 29, 29, 30, 31, 32, 31],
+        humidity: [72, 75, 78, 80, 82, 79, 76, 77, 80, 83, 85, 81, 78, 74],
+        rainfall: [12, 18, 24, 22, 15, 8, 6, 10, 14, 20, 26, 16, 9, 7],
+        condition: ["Rain", "Rain", "Rain", "Cloudy", "Rain", "Cloudy", "Cloudy", "Rain", "Rain", "Rain", "Rain", "Cloudy", "Sunny", "Cloudy"]
+      },
+      Bengaluru: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon2", "Tue2", "Wed2", "Thu2", "Fri2", "Sat2", "Sun2"],
+        tempC: [25, 26, 27, 27, 28, 27, 26, 25, 25, 26, 27, 27, 26, 25],
+        humidity: [60, 58, 55, 52, 50, 53, 57, 61, 63, 60, 56, 54, 58, 62],
+        rainfall: [4, 3, 2, 1, 0, 2, 5, 6, 7, 5, 4, 3, 4, 6],
+        condition: ["Cloudy", "Sunny", "Sunny", "Sunny", "Sunny", "Cloudy", "Rain", "Rain", "Rain", "Cloudy", "Sunny", "Sunny", "Cloudy", "Rain"]
+      },
+      London: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon2", "Tue2", "Wed2", "Thu2", "Fri2", "Sat2", "Sun2"],
+        tempC: [14, 13, 15, 16, 17, 16, 15, 14, 13, 12, 13, 14, 15, 14],
+        humidity: [68, 70, 72, 65, 62, 64, 66, 69, 73, 75, 74, 71, 68, 67],
+        rainfall: [5, 8, 6, 4, 2, 3, 6, 9, 11, 10, 7, 5, 4, 6],
+        condition: ["Rain", "Cloudy", "Rain", "Cloudy", "Sunny", "Cloudy", "Rain", "Rain", "Rain", "Rain", "Cloudy", "Cloudy", "Sunny", "Cloudy"]
+      }
+    };
+
+    const citySelect = document.getElementById("citySelect");
+    const rangeSelect = document.getElementById("rangeSelect");
+    const unitSelect = document.getElementById("unitSelect");
+
+    Object.keys(weatherData).forEach((city) => {
+      const option = document.createElement("option");
+      option.value = city;
+      option.textContent = city;
+      citySelect.appendChild(option);
+    });
+
+    citySelect.value = "Delhi";
+
+    let tempChart;
+    let rainHumidityChart;
+    let conditionChart;
+
+    function toFahrenheit(celsiusArray) {
+      return celsiusArray.map((c) => (c * 9 / 5) + 32);
+    }
+
+    function average(arr) {
+      return arr.reduce((sum, value) => sum + value, 0) / arr.length;
+    }
+
+    function countConditions(conditionList) {
+      return conditionList.reduce((acc, condition) => {
+        acc[condition] = (acc[condition] || 0) + 1;
+        return acc;
+      }, {});
+    }
+
+    function updateDashboard() {
+      const city = citySelect.value;
+      const range = Number(rangeSelect.value);
+      const unit = unitSelect.value;
+      const data = weatherData[city];
+
+      const labels = data.labels.slice(0, range);
+      const tempSource = data.tempC.slice(0, range);
+      const temp = unit === "F" ? toFahrenheit(tempSource) : tempSource;
+      const humidity = data.humidity.slice(0, range);
+      const rainfall = data.rainfall.slice(0, range);
+      const conditions = data.condition.slice(0, range);
+
+      const unitSymbol = unit === "F" ? "F" : "C";
+      const avgTempValue = average(temp);
+      const maxTempValue = Math.max(...temp);
+      const avgHumidityValue = average(humidity);
+      const rainDaysValue = rainfall.filter((r) => r > 0).length;
+
+      document.getElementById("avgTemp").textContent = `${avgTempValue.toFixed(1)} ${unitSymbol}`;
+      document.getElementById("maxTemp").textContent = `${maxTempValue.toFixed(1)} ${unitSymbol}`;
+      document.getElementById("avgHumidity").textContent = `${avgHumidityValue.toFixed(0)}%`;
+      document.getElementById("rainDays").textContent = `${rainDaysValue} / ${range}`;
+
+      const tempConfig = {
+        type: "line",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: `Temperature (${unitSymbol})`,
+              data: temp,
+              borderColor: "#1565c0",
+              backgroundColor: "rgba(21, 101, 192, 0.15)",
+              fill: true,
+              tension: 0.35,
+              pointRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: true }
+          },
+          scales: {
+            y: {
+              beginAtZero: false
+            }
+          }
+        }
+      };
+
+      const rainHumidityConfig = {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              type: "bar",
+              label: "Rainfall (mm)",
+              data: rainfall,
+              backgroundColor: "rgba(30, 136, 229, 0.75)"
+            },
+            {
+              type: "line",
+              label: "Humidity (%)",
+              data: humidity,
+              borderColor: "#43a047",
+              backgroundColor: "rgba(67, 160, 71, 0.2)",
+              tension: 0.3,
+              yAxisID: "y1"
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: true }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "Rainfall (mm)" }
+            },
+            y1: {
+              beginAtZero: true,
+              max: 100,
+              position: "right",
+              grid: { drawOnChartArea: false },
+              title: { display: true, text: "Humidity (%)" }
+            }
+          }
+        }
+      };
+
+      const conditionMap = countConditions(conditions);
+      const conditionLabels = Object.keys(conditionMap);
+      const conditionValues = Object.values(conditionMap);
+
+      const conditionConfig = {
+        type: "doughnut",
+        data: {
+          labels: conditionLabels,
+          datasets: [
+            {
+              data: conditionValues,
+              backgroundColor: ["#f9a825", "#42a5f5", "#5e35b1", "#26a69a", "#ef5350"]
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      };
+
+      if (tempChart) tempChart.destroy();
+      if (rainHumidityChart) rainHumidityChart.destroy();
+      if (conditionChart) conditionChart.destroy();
+
+      tempChart = new Chart(document.getElementById("tempChart"), tempConfig);
+      rainHumidityChart = new Chart(document.getElementById("rainHumidityChart"), rainHumidityConfig);
+      conditionChart = new Chart(document.getElementById("conditionChart"), conditionConfig);
+    }
+
+    citySelect.addEventListener("change", updateDashboard);
+    rangeSelect.addEventListener("change", updateDashboard);
+    unitSelect.addEventListener("change", updateDashboard);
+
+    updateDashboard();
+  </script>
+</body>
+</html>

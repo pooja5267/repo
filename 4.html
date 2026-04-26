@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTML Form Demo</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f3;
+            margin: 0;
+        }
+
+        .container {
+            width: 60%;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        fieldset {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #3498db;
+        }
+
+        legend {
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 90%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .inline {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            background: #3498db;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2c3e50;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1><u>Student Registration Form</u></h1>
+
+    <form>
+
+        <!-- Personal Info -->
+        <fieldset>
+            <legend>Personal Details</legend>
+
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" placeholder="Enter your name">
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Enter your email">
+            <label for="password">password</label>
+            <input type="password" id="password" placeholder="enter you password">
+
+        </fieldset>
+
+        <!-- Gender -->
+        <fieldset>
+            <legend>Gender</legend>
+
+            <input type="radio" name="gender" value="male" class="inline"> Male
+            <input type="radio" name="gender" value="female" class="inline"> Female
+            <input type="radio" name="gender" value="other" class="inline"> Other
+
+        </fieldset>
+
+        <!-- Hobbies -->
+        <fieldset>
+            <legend>Hobbies</legend>
+
+            <input type="checkbox" class="inline"> Reading
+            <input type="checkbox" class="inline"> Coding
+            <input type="checkbox" class="inline"> Traveling
+            <input type="checkbox" class="inline"> Music
+
+        </fieldset>
+
+        <!-- Dropdown -->
+        <fieldset>
+            <legend>Course Selection</legend>
+
+            <label for="course">Select Course:</label>
+            <select id="course">
+                <option>--Select--</option>
+                <option>B.E Computer</option>
+                <option>BCA</option>
+                <option>MCA</option>
+                <option>B.Sc IT</option>
+            </select>
+
+        </fieldset>
+
+        <!-- Textarea -->
+        <fieldset>
+            <legend>Feedback</legend>
+
+            <label for="feedback">Your Feedback:</label>
+            <textarea id="feedback" rows="4" placeholder="Write your feedback here..."></textarea>
+
+        </fieldset>
+
+        <!-- Buttons -->
+        <div class="buttons">
+            <button type="submit">Submit</button>
+            <button type="reset">Reset</button>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

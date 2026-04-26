@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retail Sales Analytics Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(160deg, #eef4ff, #f9fcff 50%, #effaf4);
+      color: #1b3656;
+      min-height: 100vh;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0d47a1, #1565c0, #1e88e5);
+      color: #fff;
+      border-radius: 14px;
+      padding: 24px 20px;
+      box-shadow: 0 10px 28px rgba(13, 71, 161, 0.25);
+    }
+
+    .panel {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(27, 54, 86, 0.1);
+      padding: 16px;
+      height: 100%;
+    }
+
+    .kpi-card {
+      border: 1px solid #e3edf8;
+      border-radius: 10px;
+      text-align: center;
+      background: #f8fbff;
+      padding: 12px;
+      height: 100%;
+    }
+
+    .kpi-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .kpi-label {
+      margin-top: 5px;
+      font-size: 0.9rem;
+      color: #607080;
+    }
+
+    .chart-lg {
+      position: relative;
+      height: 320px;
+    }
+
+    .chart-md {
+      position: relative;
+      height: 280px;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <div class="hero mb-4">
+      <h1 class="mb-2">Retail Sales Analytics Dashboard</h1>
+      <p class="mb-0">Track sales growth, compare categories, and monitor revenue share with interactive filters.</p>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-6 col-lg-4">
+        <div class="panel">
+          <label for="monthFilter" class="form-label fw-semibold">Filter by Month</label>
+          <select id="monthFilter" class="form-select">
+            <option value="All">All Months</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="panel">
+          <label for="categoryFilter" class="form-label fw-semibold">Filter by Category</label>
+          <select id="categoryFilter" class="form-select">
+            <option value="All">All Categories</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="panel">
+          <div class="row g-2">
+            <div class="col-4">
+              <div class="kpi-card">
+                <div class="kpi-value" id="totalRevenue">--</div>
+                <div class="kpi-label">Revenue</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="kpi-card">
+                <div class="kpi-value" id="bestMonth">--</div>
+                <div class="kpi-label">Top Month</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="kpi-card">
+                <div class="kpi-value" id="topCategory">--</div>
+                <div class="kpi-label">Top Category</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-12">
+        <div class="panel">
+          <div class="section-title">Monthly Sales Trend</div>
+          <div class="chart-lg">
+            <canvas id="monthlyTrendChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="panel">
+          <div class="section-title">Category-wise Sales</div>
+          <div class="chart-md">
+            <canvas id="categoryBarChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="panel">
+          <div class="section-title">Revenue Distribution</div>
+          <div class="chart-md">
+            <canvas id="revenuePieChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const salesData = [
+      { month: "Jan", category: "Electronics", sales: 145000 },
+      { month: "Jan", category: "Fashion", sales: 98000 },
+      { month: "Jan", category: "Groceries", sales: 123000 },
+      { month: "Jan", category: "Home Decor", sales: 76000 },
+
+      { month: "Feb", category: "Electronics", sales: 152000 },
+      { month: "Feb", category: "Fashion", sales: 105000 },
+      { month: "Feb", category: "Groceries", sales: 119000 },
+      { month: "Feb", category: "Home Decor", sales: 81000 },
+
+      { month: "Mar", category: "Electronics", sales: 167000 },
+      { month: "Mar", category: "Fashion", sales: 112000 },
+      { month: "Mar", category: "Groceries", sales: 126000 },
+      { month: "Mar", category: "Home Decor", sales: 89000 },
+
+      { month: "Apr", category: "Electronics", sales: 158000 },
+      { month: "Apr", category: "Fashion", sales: 117000 },
+      { month: "Apr", category: "Groceries", sales: 132000 },
+      { month: "Apr", category: "Home Decor", sales: 94000 },
+
+      { month: "May", category: "Electronics", sales: 176000 },
+      { month: "May", category: "Fashion", sales: 123000 },
+      { month: "May", category: "Groceries", sales: 138000 },
+      { month: "May", category: "Home Decor", sales: 97000 },
+
+      { month: "Jun", category: "Electronics", sales: 184000 },
+      { month: "Jun", category: "Fashion", sales: 131000 },
+      { month: "Jun", category: "Groceries", sales: 142000 },
+      { month: "Jun", category: "Home Decor", sales: 102000 }
+    ];
+
+    const monthFilter = document.getElementById("monthFilter");
+    const categoryFilter = document.getElementById("categoryFilter");
+
+    const totalRevenueEl = document.getElementById("totalRevenue");
+    const bestMonthEl = document.getElementById("bestMonth");
+    const topCategoryEl = document.getElementById("topCategory");
+
+    let monthlyTrendChart;
+    let categoryBarChart;
+    let revenuePieChart;
+
+    const months = [...new Set(salesData.map((item) => item.month))];
+    const categories = [...new Set(salesData.map((item) => item.category))];
+
+    months.forEach((month) => {
+      const opt = document.createElement("option");
+      opt.value = month;
+      opt.textContent = month;
+      monthFilter.appendChild(opt);
+    });
+
+    categories.forEach((category) => {
+      const opt = document.createElement("option");
+      opt.value = category;
+      opt.textContent = category;
+      categoryFilter.appendChild(opt);
+    });
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function aggregateByKey(data, key) {
+      return data.reduce((acc, item) => {
+        acc[item[key]] = (acc[item[key]] || 0) + item.sales;
+        return acc;
+      }, {});
+    }
+
+    function getFilteredData() {
+      const selectedMonth = monthFilter.value;
+      const selectedCategory = categoryFilter.value;
+
+      return salesData.filter((item) => {
+        const matchMonth = selectedMonth === "All" || item.month === selectedMonth;
+        const matchCategory = selectedCategory === "All" || item.category === selectedCategory;
+        return matchMonth && matchCategory;
+      });
+    }
+
+    function updateDashboard() {
+      const filtered = getFilteredData();
+
+      const monthTotals = aggregateByKey(filtered, "month");
+      const categoryTotals = aggregateByKey(filtered, "category");
+
+      const trendLabels = Object.keys(monthTotals);
+      const trendValues = Object.values(monthTotals);
+
+      const categoryLabels = Object.keys(categoryTotals);
+      const categoryValues = Object.values(categoryTotals);
+
+      const totalRevenue = filtered.reduce((sum, item) => sum + item.sales, 0);
+      const bestMonth = trendLabels.length
+        ? trendLabels[trendValues.indexOf(Math.max(...trendValues))]
+        : "-";
+      const topCategory = categoryLabels.length
+        ? categoryLabels[categoryValues.indexOf(Math.max(...categoryValues))]
+        : "-";
+
+      totalRevenueEl.textContent = formatCurrency(totalRevenue);
+      bestMonthEl.textContent = bestMonth;
+      topCategoryEl.textContent = topCategory;
+
+      const monthlyTrendConfig = {
+        type: "line",
+        data: {
+          labels: trendLabels,
+          datasets: [
+            {
+              label: "Monthly Sales (INR)",
+              data: trendValues,
+              borderColor: "#1565c0",
+              backgroundColor: "rgba(21, 101, 192, 0.15)",
+              fill: true,
+              tension: 0.35,
+              pointRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: true }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      };
+
+      const categoryBarConfig = {
+        type: "bar",
+        data: {
+          labels: categoryLabels,
+          datasets: [
+            {
+              label: "Category Sales (INR)",
+              data: categoryValues,
+              backgroundColor: ["#1e88e5", "#43a047", "#fb8c00", "#8e24aa"],
+              borderRadius: 8
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      };
+
+      const revenuePieConfig = {
+        type: "doughnut",
+        data: {
+          labels: categoryLabels,
+          datasets: [
+            {
+              data: categoryValues,
+              backgroundColor: ["#1e88e5", "#43a047", "#fb8c00", "#8e24aa", "#ef5350"]
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom"
+            }
+          }
+        }
+      };
+
+      if (monthlyTrendChart) monthlyTrendChart.destroy();
+      if (categoryBarChart) categoryBarChart.destroy();
+      if (revenuePieChart) revenuePieChart.destroy();
+
+      monthlyTrendChart = new Chart(document.getElementById("monthlyTrendChart"), monthlyTrendConfig);
+      categoryBarChart = new Chart(document.getElementById("categoryBarChart"), categoryBarConfig);
+      revenuePieChart = new Chart(document.getElementById("revenuePieChart"), revenuePieConfig);
+    }
+
+    monthFilter.addEventListener("change", updateDashboard);
+    categoryFilter.addEventListener("change", updateDashboard);
+
+    updateDashboard();
+  </script>
+</body>
+</html>

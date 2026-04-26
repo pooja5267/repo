@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Restaurant Menu</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f8f8f8;
+        }
+
+        .container {
+            width: 80%;
+            margin: 30px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #d35400;
+        }
+
+        .header p {
+            color: #555;
+            font-style: italic;
+        }
+
+        h2 {
+            color: #c0392b;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            background: #e67e22;
+            color: white;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .special {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .price {
+            text-align: right;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Restaurant Info -->
+    <div class="header">
+        <h1><u>Spice Delight Restaurant</u></h1>
+        <p><i>Experience the taste of authentic and delicious cuisine!</i></p>
+    </div>
+
+    <hr>
+
+    <!-- Starters -->
+    <h2>🍽️ Starters</h2>
+
+    <table>
+        <tr>
+            <th>Item</th>
+            <th class="price">Price</th>
+        </tr>
+
+        <tr>
+            <td>Paneer Tikka</td>
+            <td class="price">₹180</td>
+        </tr>
+
+        <tr>
+            <td class="special">🔥 Chicken Lollipop (Chef's Special)</td>
+            <td class="price">₹220</td>
+        </tr>
+
+        <tr>
+            <td>Veg Spring Rolls</td>
+            <td class="price">₹150</td>
+        </tr>
+    </table>
+
+    <hr>
+
+    <!-- Main Course -->
+    <h2>🍛 Main Course</h2>
+
+    <table>
+        <tr>
+            <th>Item</th>
+            <th class="price">Price</th>
+        </tr>
+
+        <tr>
+            <td>Butter Paneer Masala</td>
+            <td class="price">₹250</td>
+        </tr>
+
+        <tr>
+            <td class="special">⭐ Chicken Biryani (Best Seller)</td>
+            <td class="price">₹300</td>
+        </tr>
+
+        <tr>
+            <td>Dal Tadka</td>
+            <td class="price">₹180</td>
+        </tr>
+    </table>
+
+    <hr>
+
+    <!-- Desserts -->
+    <h2>🍨 Desserts</h2>
+
+    <ul>
+        <li>Gulab Jamun - ₹80</li>
+        <li class="special"><b>Ice Cream Sundae (Special)</b> - ₹120</li>
+        <li>Chocolate Brownie - ₹150</li>
+    </ul>
+
+</div>
+
+</body>
+</html>

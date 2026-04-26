@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Urban Vogue | Fashion Store</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand: #ff4d6d;
+      --accent: #7a5cff;
+      --dark: #1f2430;
+      --muted: #6c757d;
+      --bg: #f6f7fb;
+      --card: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+    }
+
+    .navbar-brand span {
+      color: var(--brand);
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #1f2430, #4c5dff 65%, #8b6dff);
+      color: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .hero .badge {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .hero-image {
+      min-height: 220px;
+      background: url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80") center/cover no-repeat;
+      border-radius: 16px;
+    }
+
+    .panel {
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid #ecedf2;
+      box-shadow: 0 10px 24px rgba(20, 25, 40, 0.06);
+    }
+
+    .filter-chip {
+      border: 1px solid #dee2e6;
+      background: #fff;
+      color: #495057;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .filter-chip.active,
+    .filter-chip:hover {
+      background: #ffe9ee;
+      border-color: #ffc4d0;
+      color: #c2183f;
+    }
+
+    .product-card {
+      background: #fff;
+      border: 1px solid #ecedf2;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(20, 25, 40, 0.05);
+      height: 100%;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 26px rgba(20, 25, 40, 0.1);
+    }
+
+    .product-img {
+      height: 230px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .tag {
+      background: #eef1ff;
+      color: #4954ce;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      padding: 6px 10px;
+      font-weight: 500;
+    }
+
+    .rating {
+      color: #f59f00;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    .price {
+      font-weight: 700;
+      color: #161b28;
+      font-size: 1.1rem;
+    }
+
+    .old-price {
+      color: #9aa0ab;
+      text-decoration: line-through;
+      font-size: 0.92rem;
+      margin-left: 6px;
+    }
+
+    .btn-brand {
+      background: var(--brand);
+      border: none;
+      color: #fff;
+    }
+
+    .btn-brand:hover {
+      background: #ea2d54;
+      color: #fff;
+    }
+
+    .btn-outline-brand {
+      border: 1px solid #ffb4c2;
+      color: #d91b49;
+      background: #fff;
+    }
+
+    .btn-outline-brand:hover {
+      border-color: var(--brand);
+      background: #ffe9ee;
+      color: #b0143b;
+    }
+
+    .cart-item img {
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    footer {
+      background: #131722;
+      color: #e7e9ee;
+      margin-top: 42px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
+    <div class="container py-1">
+      <a class="navbar-brand fw-bold" href="#">Urban<span>Vogue</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#shop">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="#deals">Deals</a></li>
+          <li class="nav-item mt-2 mt-lg-0">
+            <button class="btn btn-dark position-relative" data-bs-toggle="offcanvas" data-bs-target="#cartDrawer">
+              Cart
+              <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4 py-lg-5">
+    <section class="hero p-4 p-lg-5 mb-4 mb-lg-5">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-7">
+          <span class="badge rounded-pill px-3 py-2 mb-3">Spring Collection 2026</span>
+          <h1 class="fw-bold display-6 mb-3">Shop Trendy Fashion for Every Mood</h1>
+          <p class="mb-4">Discover curated styles in women, men, streetwear, and accessories. Filter products, search by name, and add your favorites to cart instantly.</p>
+          <a href="#shop" class="btn btn-light fw-semibold px-4 py-2">Explore Products</a>
+        </div>
+        <div class="col-lg-5">
+          <div class="hero-image"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="shop" class="row g-4">
+      <aside class="col-lg-3">
+        <div class="panel p-3 p-lg-4">
+          <h5 class="fw-bold mb-3">Filters</h5>
+          <label class="form-label fw-semibold small">Search</label>
+          <input id="searchInput" class="form-control mb-3" type="search" placeholder="Search by product name">
+
+          <label class="form-label fw-semibold small">Category</label>
+          <div id="categoryButtons" class="d-flex flex-wrap gap-2 mb-3"></div>
+
+          <label class="form-label fw-semibold small">Sort by</label>
+          <select id="sortSelect" class="form-select mb-3">
+            <option value="featured">Featured</option>
+            <option value="priceLow">Price: Low to High</option>
+            <option value="priceHigh">Price: High to Low</option>
+            <option value="ratingHigh">Rating: High to Low</option>
+          </select>
+
+          <label class="form-label fw-semibold small">Max Price: <span id="priceValue">3000</span></label>
+          <input id="priceRange" type="range" class="form-range" min="500" max="3000" step="100" value="3000">
+
+          <button id="clearFilters" class="btn btn-outline-secondary w-100 mt-2">Clear Filters</button>
+        </div>
+      </aside>
+
+      <div class="col-lg-9">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+          <h4 class="fw-bold mb-0" id="deals">Latest Products</h4>
+          <div class="text-muted small"><span id="productCount">0</span> products found</div>
+        </div>
+        <div id="productGrid" class="row g-3"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="cartDrawer">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title fw-bold">Your Cart</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+      <div id="cartItems" class="flex-grow-1"></div>
+      <div class="border-top pt-3 mt-3">
+        <div class="d-flex justify-content-between">
+          <span class="muted">Subtotal</span>
+          <strong id="cartTotal">Rs. 0</strong>
+        </div>
+        <button class="btn btn-brand w-100 mt-3">Proceed to Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="py-4">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <p class="mb-0 small">© 2026 UrbanVogue Fashion Store</p>
+      <p class="mb-0 small">Built with HTML, CSS, JavaScript and Bootstrap</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const products = [
+      { id: 1, name: "Oversized Graphic Tee", category: "Men", price: 999, oldPrice: 1399, rating: 4.5, image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=800&q=80" },
+      { id: 2, name: "Floral Summer Dress", category: "Women", price: 1599, oldPrice: 2299, rating: 4.8, image: "https://images.unsplash.com/photo-1464863979621-258859e62245?auto=format&fit=crop&w=800&q=80" },
+      { id: 3, name: "Urban Sneakers", category: "Footwear", price: 1899, oldPrice: 2499, rating: 4.7, image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80" },
+      { id: 4, name: "Classic Denim Jacket", category: "Women", price: 2099, oldPrice: 2899, rating: 4.6, image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80" },
+      { id: 5, name: "Slim Fit Formal Shirt", category: "Men", price: 1299, oldPrice: 1799, rating: 4.3, image: "https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=800&q=80" },
+      { id: 6, name: "Statement Handbag", category: "Accessories", price: 1699, oldPrice: 2199, rating: 4.4, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80" },
+      { id: 7, name: "Streetwear Hoodie", category: "Men", price: 1499, oldPrice: 1999, rating: 4.6, image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80" },
+      { id: 8, name: "Chunky Heels", category: "Footwear", price: 1799, oldPrice: 2399, rating: 4.2, image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80" },
+      { id: 9, name: "Minimal Wrist Watch", category: "Accessories", price: 2199, oldPrice: 2899, rating: 4.9, image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=800&q=80" }
+    ];
+
+    const state = {
+      search: "",
+      category: "All",
+      sortBy: "featured",
+      maxPrice: 3000,
+      cart: JSON.parse(localStorage.getItem("fashionCart") || "[]")
+    };
+
+    const categoryButtons = document.getElementById("categoryButtons");
+    const productGrid = document.getElementById("productGrid");
+    const productCount = document.getElementById("productCount");
+    const searchInput = document.getElementById("searchInput");
+    const sortSelect = document.getElementById("sortSelect");
+    const priceRange = document.getElementById("priceRange");
+    const priceValue = document.getElementById("priceValue");
+    const clearFilters = document.getElementById("clearFilters");
+    const cartItems = document.getElementById("cartItems");
+    const cartTotal = document.getElementById("cartTotal");
+    const cartCount = document.getElementById("cartCount");
+
+    function formatPrice(value) {
+      return "Rs. " + value.toLocaleString("en-IN");
+    }
+
+    function getCategories() {
+      return ["All", ...new Set(products.map((p) => p.category))];
+    }
+
+    function renderCategories() {
+      const categories = getCategories();
+      categoryButtons.innerHTML = categories
+        .map((cat) => `
+          <button class="filter-chip ${state.category === cat ? "active" : ""}" data-category="${cat}">
+            ${cat}
+          </button>
+        `)
+        .join("");
+    }
+
+    function getFilteredProducts() {
+      let filtered = products.filter((product) => {
+        const matchName = product.name.toLowerCase().includes(state.search.toLowerCase());
+        const matchCategory = state.category === "All" || product.category === state.category;
+        const matchPrice = product.price <= state.maxPrice;
+        return matchName && matchCategory && matchPrice;
+      });
+
+      if (state.sortBy === "priceLow") filtered.sort((a, b) => a.price - b.price);
+      if (state.sortBy === "priceHigh") filtered.sort((a, b) => b.price - a.price);
+      if (state.sortBy === "ratingHigh") filtered.sort((a, b) => b.rating - a.rating);
+
+      return filtered;
+    }
+
+    function addToCart(productId) {
+      const existing = state.cart.find((item) => item.id === productId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        state.cart.push({ id: productId, qty: 1 });
+      }
+      localStorage.setItem("fashionCart", JSON.stringify(state.cart));
+      renderCart();
+    }
+
+    function updateQuantity(productId, delta) {
+      const item = state.cart.find((entry) => entry.id === productId);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        state.cart = state.cart.filter((entry) => entry.id !== productId);
+      }
+      localStorage.setItem("fashionCart", JSON.stringify(state.cart));
+      renderCart();
+    }
+
+    function renderProducts() {
+      const filteredProducts = getFilteredProducts();
+      productCount.textContent = filteredProducts.length;
+
+      if (!filteredProducts.length) {
+        productGrid.innerHTML = `
+          <div class="col-12">
+            <div class="panel p-4 text-center">
+              <h6 class="fw-semibold mb-2">No products match your filters</h6>
+              <p class="text-muted mb-0">Try different search text, category, or price range.</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      productGrid.innerHTML = filteredProducts.map((product) => `
+        <div class="col-md-6 col-xl-4">
+          <div class="product-card">
+            <img src="${product.image}" alt="${product.name}" class="product-img">
+            <div class="p-3">
+              <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                <span class="tag">${product.category}</span>
+                <span class="rating">★ ${product.rating}</span>
+              </div>
+              <h6 class="fw-semibold mb-2">${product.name}</h6>
+              <p class="mb-3">
+                <span class="price">${formatPrice(product.price)}</span>
+                <span class="old-price">${formatPrice(product.oldPrice)}</span>
+              </p>
+              <div class="d-grid gap-2">
+                <button class="btn btn-brand add-cart-btn" data-id="${product.id}">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderCart() {
+      const detailedCart = state.cart.map((item) => {
+        const product = products.find((p) => p.id === item.id);
+        return { ...product, qty: item.qty };
+      }).filter(Boolean);
+
+      const totalQty = detailedCart.reduce((sum, item) => sum + item.qty, 0);
+      const totalPrice = detailedCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+      cartCount.textContent = totalQty;
+      cartTotal.textContent = formatPrice(totalPrice);
+
+      if (!detailedCart.length) {
+        cartItems.innerHTML = `<p class="text-muted">Your cart is empty. Add products to continue shopping.</p>`;
+        return;
+      }
+
+      cartItems.innerHTML = detailedCart.map((item) => `
+        <div class="cart-item d-flex gap-3 mb-3">
+          <img src="${item.image}" alt="${item.name}">
+          <div class="flex-grow-1">
+            <h6 class="mb-1">${item.name}</h6>
+            <p class="mb-2 small text-muted">${formatPrice(item.price)}</p>
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-sm btn-outline-secondary qty-btn" data-id="${item.id}" data-delta="-1">-</button>
+              <span>${item.qty}</span>
+              <button class="btn btn-sm btn-outline-secondary qty-btn" data-id="${item.id}" data-delta="1">+</button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    document.addEventListener("click", (event) => {
+      const categoryBtn = event.target.closest("[data-category]");
+      if (categoryBtn) {
+        state.category = categoryBtn.dataset.category;
+        renderCategories();
+        renderProducts();
+      }
+
+      const addBtn = event.target.closest(".add-cart-btn");
+      if (addBtn) {
+        addToCart(Number(addBtn.dataset.id));
+      }
+
+      const qtyBtn = event.target.closest(".qty-btn");
+      if (qtyBtn) {
+        updateQuantity(Number(qtyBtn.dataset.id), Number(qtyBtn.dataset.delta));
+      }
+    });
+
+    searchInput.addEventListener("input", (e) => {
+      state.search = e.target.value.trim();
+      renderProducts();
+    });
+
+    sortSelect.addEventListener("change", (e) => {
+      state.sortBy = e.target.value;
+      renderProducts();
+    });
+
+    priceRange.addEventListener("input", (e) => {
+      state.maxPrice = Number(e.target.value);
+      priceValue.textContent = state.maxPrice;
+      renderProducts();
+    });
+
+    clearFilters.addEventListener("click", () => {
+      state.search = "";
+      state.category = "All";
+      state.sortBy = "featured";
+      state.maxPrice = 3000;
+      searchInput.value = "";
+      sortSelect.value = "featured";
+      priceRange.value = 3000;
+      priceValue.textContent = "3000";
+      renderCategories();
+      renderProducts();
+    });
+
+    renderCategories();
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
