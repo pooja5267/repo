@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bookings</title>
+</head>
+<body>
+
+<h2>Booking Records</h2>
+
+<ul>
+    <% bookings.forEach(b => { %>
+        <li>
+            <strong><%= b.name %></strong> rented 
+            <%= b.itemName %> for 
+            <%= b.duration %>
+        </li>
+    <% }) %>
+</ul>
+
+<br>
+<a href="/">Back</a>
+
+</body>
+</html>

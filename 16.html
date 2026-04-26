@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fitness Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f6f9;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .controls {
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    select {
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 300px !important;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h2>Fitness Tracking Dashboard</h2>
+</header>
+
+<div class="container">
+
+  <!-- Controls -->
+  <div class="controls">
+    <label>Select Day:</label>
+    <select id="daySelect">
+      <option value="0">Monday</option>
+      <option value="1">Tuesday</option>
+      <option value="2">Wednesday</option>
+      <option value="3">Thursday</option>
+      <option value="4">Friday</option>
+      <option value="5">Saturday</option>
+      <option value="6">Sunday</option>
+    </select>
+
+    <label>Select Week:</label>
+    <select id="weekSelect">
+      <option value="0">Week 1</option>
+      <option value="1">Week 2</option>
+      <option value="2">Week 3</option>
+    </select>
+  </div>
+
+  <!-- Charts -->
+  <div class="grid">
+    
+    <div class="card">
+      <h3>Daily Steps / Calories</h3>
+      <canvas id="lineChart"></canvas>
+    </div>
+
+    <div class="card">
+      <h3>Activity Distribution</h3>
+      <canvas id="pieChart"></canvas>
+    </div>
+
+    <div class="card">
+      <h3>Weekly Comparison</h3>
+      <canvas id="barChart"></canvas>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // Sample Data
+  const dailyStepsData = [
+    [5000, 7000, 8000, 6500, 9000, 10000, 7500],
+    [6000, 7200, 8200, 6800, 9200, 10500, 7800],
+    [5500, 7100, 8100, 6700, 9100, 10200, 7600]
+  ];
+
+  const weeklyComparison = [
+    [45000, 50000, 47000],
+    [47000, 52000, 49000],
+    [46000, 51000, 48000]
+  ];
+
+  const activityData = [
+    [50, 30, 20],
+    [40, 35, 25],
+    [45, 25, 30]
+  ];
+
+  let lineChart, pieChart, barChart;
+
+  function createCharts(weekIndex, dayIndex) {
+    
+    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+    // Destroy previous charts
+    if (lineChart) lineChart.destroy();
+    if (pieChart) pieChart.destroy();
+    if (barChart) barChart.destroy();
+
+    // Line Chart
+    lineChart = new Chart(document.getElementById('lineChart'), {
+      type: 'line',
+      data: {
+        labels: days,
+        datasets: [{
+          label: 'Steps',
+          data: dailyStepsData[weekIndex],
+          borderWidth: 2,
+          fill: false
+        }]
+      }
+    });
+
+    // Pie Chart
+    pieChart = new Chart(document.getElementById('pieChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Walking', 'Running', 'Cycling'],
+        datasets: [{
+          data: activityData[weekIndex]
+        }]
+      }
+    });
+
+    // Bar Chart
+    barChart = new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Week 1', 'Week 2', 'Week 3'],
+        datasets: [{
+          label: 'Total Steps',
+          data: weeklyComparison[weekIndex]
+        }]
+      }
+    });
+  }
+
+  // Event Listeners
+  document.getElementById("weekSelect").addEventListener("change", updateCharts);
+  document.getElementById("daySelect").addEventListener("change", updateCharts);
+
+  function updateCharts() {
+    const week = document.getElementById("weekSelect").value;
+    const day = document.getElementById("daySelect").value;
+    createCharts(week, day);
+  }
+
+  // Initial Load
+  createCharts(0, 0);
+</script>
+
+</body>
+</html>
