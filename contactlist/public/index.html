@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Management</title>
+</head>
+<body>
+
+<h1> Contact Management System</h1>
+
+<input id="name" placeholder="Name"><br><br>
+<input id="phone" placeholder="Phone"><br><br>
+<input id="email" placeholder="Email"><br><br>
+
+<button onclick="addContact()">Add Contact</button>
+
+<br><br>
+<button onclick="loadContacts()">View Contacts</button>
+
+<ul id="contactList"></ul>
+
+<script>
+async function addContact() {
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const email = document.getElementById("email").value;
+
+    await fetch("http://localhost:3000/add-contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, email })
+    });
+
+    alert("Contact Added!");
+}
+
+async function loadContacts() {
+    const res = await fetch("http://localhost:3000/contacts");
+    const data = await res.json();
+
+    let list = document.getElementById("contactList");
+    list.innerHTML = "";
+
+    data.forEach(c => {
+        list.innerHTML += `<li>${c.name} - ${c.phone} - ${c.email}</li>`;
+    });
+}
+</script>
+
+</body>
+</html>

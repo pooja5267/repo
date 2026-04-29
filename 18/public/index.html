@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedback Form</title>
+</head>
+<body>
+
+<h2 style="text-align:center;">Feedback Form</h2>
+
+<input type="text" id="name" placeholder="Name"><br><br>
+<input type="text" id="subject" placeholder="Subject"><br><br>
+<textarea id="feedback" placeholder="Your Feedback"></textarea><br><br>
+
+<button onclick="submitFeedback()">Submit</button>
+
+<br><br>
+<a href="view.html">View Feedback</a>
+
+<script>
+async function submitFeedback(){
+    const name = document.getElementById("name").value;
+    const subject = document.getElementById("subject").value;
+    const feedback = document.getElementById("feedback").value;
+
+    await fetch("http://localhost:3000/add-feedback", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, subject, feedback })
+    });
+
+    alert("Feedback submitted successfully");
+}
+</script>
+
+</body>
+</html>

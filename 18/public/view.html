@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>view feedbacks</title>
+</head>
+<body>
+    <h2>all feedbacks</h2>
+    <button onclick="loadFeedbacks()">Load Feedbacks</button>
+   <table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Feedback</th>
+        </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+</table>
+    <script>
+        async function loadFeedbacks(){
+            const res = await fetch("http://localhost:3000/feedbacks")
+            const data = await res.json();
+            let table = document.getElementById("tableBody");
+            table.innerHTML=" ";
+            data.forEach(f =>
+                {
+                    table.innerHTML +=`<tr>
+                    <td>${f.name}</td>
+                    <td>${f.subject}</td>       
+                    <td>${f.feedback}</td>
+                    </tr>`;
+
+                }
+            );
+          
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Appointment Booking</title>
+</head>
+<body>
+
+<h1>📅 Book Appointment</h1>
+
+<input id="name" placeholder="Your Name"><br><br>
+
+<select id="service">
+    <option value="Doctor">Doctor</option>
+    <option value="Salon">Salon</option>
+    <option value="Consultant">Consultant</option>
+</select><br><br>
+
+<input type="date" id="date"><br><br>
+<input type="time" id="time"><br><br>
+
+<button onclick="bookAppointment()">Book</button>
+
+<br><br>
+<a href="view.html">View Bookings</a>
+
+<script>
+async function bookAppointment() {
+    const data = {
+        name: document.getElementById("name").value,
+        service: document.getElementById("service").value,
+        date: document.getElementById("date").value,
+        time: document.getElementById("time").value
+    };
+
+    await fetch("http://localhost:3000/add-booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    alert("Appointment Booked!");
+}
+</script>
+
+</body>
+</html>

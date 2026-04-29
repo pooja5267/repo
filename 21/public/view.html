@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Bookings</title>
+</head>
+<body>
+
+<h1>📋 Booked Appointments</h1>
+
+<button onclick="loadBookings()">Load Bookings</button>
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Service</th>
+        <th>Date</th>
+        <th>Time</th>
+    </tr>
+    <tbody id="table"></tbody>
+</table>
+
+<br>
+<a href="index.html">Back</a>
+
+<script>
+async function loadBookings() {
+    const res = await fetch("http://localhost:3000/bookings");
+    const data = await res.json();
+
+    let table = document.getElementById("table");
+    table.innerHTML = "";
+
+    data.forEach(b => {
+        table.innerHTML += `
+        <tr>
+            <td>${b.name}</td>
+            <td>${b.service}</td>
+            <td>${b.date}</td>
+            <td>${b.time}</td>
+        </tr>`;
+    });
+}
+</script>
+
+</body>
+</html>

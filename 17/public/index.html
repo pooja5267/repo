@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Website</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            width: 400px;
+            margin: auto;
+            padding: 20px;
+            margin-top: 50px;
+            border-radius: 10px;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+            padding: 10px;
+            background: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            margin: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1> College Management System</h1>
+
+<div class="container">
+    <h3>Add Student</h3>
+    <input id="name" placeholder="Name">
+    <input id="dept" placeholder="Department">
+    <input id="year" placeholder="Year">
+    <button onclick="addStudent()">Add</button>
+</div>
+
+<h2>Student List</h2>
+<button onclick="loadStudents()">Load Students</button>
+
+<table border="1" id="table">
+    <tr>
+        <th>Name</th>
+        <th>Department</th>
+        <th>Year</th>
+    </tr>
+</table>
+
+<script>
+async function addStudent() {
+    const data = {
+        name: document.getElementById("name").value,
+        department: document.getElementById("dept").value,
+        year: document.getElementById("year").value
+    };
+
+    await fetch("http://localhost:3000/add-student", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    alert("Student Added!");
+}
+
+async function loadStudents() {
+    const res = await fetch("http://localhost:3000/students");
+    const data = await res.json();
+
+    let table = document.getElementById("table");
+
+    data.forEach(s => {
+        let row = `<tr>
+            <td>${s.name}</td>
+            <td>${s.department}</td>
+            <td>${s.year}</td>
+        </tr>`;
+        table.innerHTML += row;
+    });
+}
+</script>
+
+</body>
+</html>

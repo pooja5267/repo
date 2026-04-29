@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rental Booking</title>
+</head>
+<body>
+
+<h2>Rent an Item</h2>
+
+<input id="name" placeholder="Your Name"><br><br>
+
+<!-- ✅ STATIC DROPDOWN -->
+<select id="item">
+    <option value="">Select Item</option>
+    <option value="Bike">Bike</option>
+    <option value="Laptop">Laptop</option>
+    <option value="Camera">Camera</option>
+</select><br><br>
+
+<input id="duration" placeholder="Duration (e.g. 2 days)"><br><br>
+<input id="contact" placeholder="Contact Number"><br><br>
+
+<button onclick="bookItem()">Book</button>
+
+<br><br>
+<a href="view.html">View Bookings</a>
+
+<script>
+// ❌ REMOVE loadItems() (no need now)
+
+// Book item
+async function bookItem() {
+    const name = document.getElementById("name").value;
+    const item = document.getElementById("item").value;
+    const duration = document.getElementById("duration").value;
+    const contact = document.getElementById("contact").value;
+
+    if (!name || !item || !duration || !contact) {
+        alert("Fill all fields");
+        return;
+    }
+
+    await fetch("http://localhost:3000/add-booking", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, item, duration, contact })
+    });
+
+    alert("Booking Successful");
+}
+</script>
+
+</body>
+</html>

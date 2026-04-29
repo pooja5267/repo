@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Vehicles</title>
+</head>
+<body>
+
+<h2> Available Vehicles</h2>
+
+<button onclick="loadVehicles()">Load Vehicles</button>
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Price</th>
+        <th>Details</th>
+    </tr>
+    <tbody id="table"></tbody>
+</table>
+
+<br>
+<a href="index.html">Back</a>
+
+<script>
+async function loadVehicles() {
+    const res = await fetch("http://localhost:3000/vehicles");
+    const data = await res.json();
+
+    let table = document.getElementById("table");
+    table.innerHTML = "";
+
+    data.forEach(v => {
+        table.innerHTML += `
+        <tr>
+            <td>${v.name}</td>
+            <td>${v.type}</td>
+            <td>${v.price}</td>
+            <td>${v.details}</td>
+        </tr>`;
+    });
+}
+</script>
+
+</body>
+</html>
